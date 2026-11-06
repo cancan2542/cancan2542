@@ -1,0 +1,43 @@
+# すべての実行はコンテナ内で行う（ローカルに依存パッケージを入れない）
+services:
+  # SVG生成
+  #   ダミー統計:  docker compose run --rm generate
+  #   実統計:      GITHUB_TOKEN=... docker compose run --rm generate --live
+  generate:
+    build: .
+    image: profile-generator
+    volumes:
+      - .:/app
+    environment:
+      - GITHUB_TOKEN
+    command: ["--offline"]
+
+  # プレビューPNG（Chromium headless）。出力先は PREVIEW_OUT（既定 /tmp/profile-preview）
+  #   PREVIEW_OUT=$(mktemp -d) docker compose run --rm preview [ms ...]
+  preview:
+    build:
+      context: .
+      dockerfile: docker/preview.Dockerfile
+    image: profile-preview
+    volumes:
+      - .:/app:ro
+      - ${PREVIEW_OUT:-/tmp/profile-preview}:/out
+
+  # --- Security checks (normally run by .claude/hooks/security-gate.sh) ---
+  # pip-audit: docker compose run --rm -T -v "<dir>:/scan:ro" audit -r /scan/req.txt --no-deps --disable-pip
+  audit:
+    build:
+      context: .
+      dockerfile: docker/audit.Dockerfile
+    image: profile-audit
+
+  # Trivy (config / secret / image scan). Pinned by digest.
+  #   docker compose run --rm -T trivy config --severity HIGH,CRITICAL /src
+  trivy:
+    image: aquasec/trivy:0.76.1@sha256:790fd66d1697395d8693d1acaa1ea702406a20f109b6fc7bac8db623eca6c06c
+    volumes:
+      - .:/src:ro
+      - trivy-cache:/root/.cache/trivy
+
+volumes:
+  trivy-cache:

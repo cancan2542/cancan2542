@@ -1,0 +1,78 @@
+name: Update profile
+
+on:
+  schedule:
+    - cron: "0 0 * * *" # 毎日 09:00 JST
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - profile.toml
+      - scripts/**
+      - assets/**
+      - Dockerfile
+      - requirements.txt
+      - .github/workflows/update.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-profile
+  cancel-in-progress: false
+
+jobs:
+  generate:
+    name: Generate RPG SVGs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build generator image
+        run: docker build -t profile-generator .
+
+      - name: Generate SVGs with live stats
+        env:
+          # 非公開リポジトリの貢献も数えたい場合は read:user スコープのPATを
+          # リポジトリSecret `PROFILE_TOKEN` に登録する（未登録なら GITHUB_TOKEN を使用）
+          GITHUB_TOKEN: ${{ secrets.PROFILE_TOKEN || secrets.GITHUB_TOKEN }}
+        run: |
+          docker run --rm -e GITHUB_TOKEN -u "$(id -u):$(id -g)" \
+            -v "$PWD:/app" profile-generator --live
+
+      - name: Check outputs (token leaks / unsafe SVG)
+        env:
+          GITHUB_TOKEN: ${{ secrets.PROFILE_TOKEN || secrets.GITHUB_TOKEN }}
+        run: sh scripts/check_outputs.sh dist README.md
+
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add dist README.md
+          if git diff --cached --quiet; then
+            echo "No changes"
+            exit 0
+          fi
+          git commit -m "chore: update profile stats"
+          git push
+
+  snake:
+    name: Contribution snake
+    runs-on: ubuntu-latest
+    steps:
+      - uses: Platane/snk/svg-only@v3
+        with:
+          github_user_name: ${{ github.repository_owner }}
+          outputs: |
+            out/github-snake.svg?palette=github-light&color_snake=#d82800
+            out/github-snake-dark.svg?palette=github-dark&color_snake=#f8b800
+
+      - name: Publish to output branch
+        uses: crazy-max/ghaction-github-pages@v4
+        with:
+          target_branch: output
+          build_dir: out
+          keep_history: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

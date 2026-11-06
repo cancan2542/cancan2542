@@ -1,0 +1,72 @@
+# ============================================================
+#  プロフィール設定 — 基本的にこのファイルだけ編集すればOK
+#  編集後: docker compose run --rm generate でプレビュー用SVGを生成
+# ============================================================
+
+github = "cancan2542"          # 統計を取得するGitHubユーザー名
+name = "きゃん"                 # なまえ（メッセージ窓などで使用）
+status_title = "ぷろふぃーる"     # ステータス窓のタイトル
+title = ""                     # ヘッダー上部のロゴ（空なら表示しない）
+job = "しすてむえんじにあ"        # しょくぎょう
+theme = "gb"                   # 見た目: gb(緑の液晶風) / mono(白黒4階調) / nes(カラー)
+character = "bear"             # キャラ: bear(フードのクマ) / hero(フードの勇者)
+enemy = "slime"                # てき: slime(スライム) / bug(むし)
+
+# LV: 累計コントリビューション数から算出
+#   LV n に必要な累計 = level.base × (n − 1) ^ level.exponent   （LV の上限は level.max）
+#   既定 (10, 2, 99) の目安: LV2=10, LV3=40, LV5=160, LV10=810, LV20=3610, LV50=24010, LV99=96040
+level.base = 10
+level.exponent = 2
+level.max = 99
+
+# ヘッダーのメッセージ窓（最大2行、1行あたり全角30文字程度まで）
+messages = [
+  "やせいの きゃん が あらわれた！",
+  "きゃん は コードを かきはじめた！",
+]
+
+# ---- じゅもん（技術スタック） 最大8件, level は 1〜5 ----
+# TODO(pending): 職務経歴書リポジトリから取得する予定。それまでは下記の仮データを表示
+skills_title = "じゅもん"
+
+[[skills]]
+name = "TypeScript"
+level = 4
+
+[[skills]]
+name = "Python"
+level = 4
+
+[[skills]]
+name = "React"
+level = 3
+
+[[skills]]
+name = "Go"
+level = 2
+
+[[skills]]
+name = "Docker"
+level = 3
+
+[[skills]]
+name = "AWS"
+level = 2
+
+# ---- コマンド（リンクボタン） ----
+[[links]]
+label = "GitHub"
+url = "https://github.com/cancan2542"
+
+[[links]]
+label = "Repositories"
+url = "https://github.com/cancan2542?tab=repositories"
+
+# 例: SNSを追加する場合はコメントを外してURLを設定
+# [[links]]
+# label = "X"
+# url = "https://x.com/your_id"
+#
+# [[links]]
+# label = "Zenn"
+# url = "https://zenn.dev/your_id"

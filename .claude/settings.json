@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "allow": [
+      "Bash(docker compose run --rm generate*)",
+      "Bash(docker compose run --rm preview*)",
+      "Bash(docker compose build*)",
+      "Bash(git status*)",
+      "Bash(git diff*)",
+      "Bash(git log*)"
+    ],
+    "deny": [
+      "Bash(pip install *)",
+      "Bash(pip3 install *)",
+      "Bash(python -m pip *)",
+      "Bash(python3 -m pip *)",
+      "Bash(python -m venv *)",
+      "Bash(python3 -m venv *)",
+      "Bash(npm install *)",
+      "Bash(brew install *)",
+      "Bash(git push --force*)",
+      "Bash(git push -f*)",
+      "Edit(dist/**)",
+      "Write(dist/**)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/security-gate.sh\" pre",
+            "timeout": 600,
+            "statusMessage": "セキュリティチェック中..."
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/security-gate.sh\" post",
+            "timeout": 900,
+            "statusMessage": "セキュリティチェック中（脆弱性スキャン）..."
+          }
+        ]
+      }
+    ]
+  }
+}

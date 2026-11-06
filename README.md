@@ -1,16 +1,24 @@
-## Hi there 👋
+<div align="center">
 
-<!--
-**cancan2542/cancan2542** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
+<img src="dist/header.svg" width="100%" alt="やせいの きゃん が あらわれた！">
 
-Here are some ideas to get you started:
+<img src="dist/status.svg" width="49%" alt="ステータス"> <img src="dist/skills.svg" width="49%" alt="じゅもん（技術スタック）">
 
-- 🔭 I’m currently working on ...
-- 🌱 I’m currently learning ...
-- 👯 I’m looking to collaborate on ...
-- 🤔 I’m looking for help with ...
-- 💬 Ask me about ...
-- 📫 How to reach me: ...
-- 😄 Pronouns: ...
-- ⚡ Fun fact: ...
--->
+</div>
+
+<!-- COMMANDS:START -->
+<p align="center">
+  <a href="https://github.com/cancan2542"><img src="dist/cmd-github.svg" height="48" alt="GitHub"></a>
+  <a href="https://github.com/cancan2542?tab=repositories"><img src="dist/cmd-repositories.svg" height="48" alt="Repositories"></a>
+</p>
+<!-- COMMANDS:END -->
+
+<div align="center">
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/cancan2542/cancan2542/output/github-snake-dark.svg">
+  <img src="https://raw.githubusercontent.com/cancan2542/cancan2542/output/github-snake.svg" width="100%" alt="contribution snake">
+</picture>
+
+
+</div>
